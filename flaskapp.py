@@ -87,7 +87,3 @@ def sendCurrentClasses():
         )
 
     return {"currentClasses": courses}
-
-
-if __name__ == '__main__':
-    app.run()
