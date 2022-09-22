@@ -1,3 +1,4 @@
+from tokenize import triple_quoted
 from flask import Flask, request
 from flask_cors import CORS
 from index import (getInfo, getCurrentClasses, getPast, getStudentSchedule)
@@ -87,3 +88,7 @@ def sendCurrentClasses():
         )
 
     return {"currentClasses": courses}
+
+
+if __name__ == "main__":
+    app.run()
