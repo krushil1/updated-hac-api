@@ -17,51 +17,54 @@ CORS(app)
 def home():
     return "Hello World"
 
-@app.route("/students/pastassignments", methods=["GET"])
-def pastAssignments():
-    username = request.args.get("username")
-    password = request.args.get("password")
-    quarter = request.args.get("quarter")
+# @app.route("/students/pastassignments", methods=["GET"])
+# def pastAssignments():
+#     username = request.args.get("username")
+#     password = request.args.get("password")
+#     quarter = request.args.get("quarter")
 
-    if(username.lower() == "john" and password.lower() == "doe"):
-        if(quarter == "1"):
-            return firstQuarter
-        elif (quarter == "2"):
-            return secondQuarter
-        elif (quarter == "3"):
-            return thirdQuarter
-        elif (quarter == "4"):
-            return fourthQuarter
+#     if(username.lower() == "john" and password.lower() == "doe"):
+#         if(quarter == "1"):
+#             return firstQuarter
+#         elif (quarter == "2"):
+#             return secondQuarter
+#         elif (quarter == "3"):
+#             return thirdQuarter
+#         elif (quarter == "4"):
+#             return fourthQuarter
 
-    courses = []
+#     courses = []
 
-    classes = getPast(username, password, quarter)
+#     classes = getPast(username, password, quarter)
 
-    for course in classes:
-        courses.append(
-            {
-                "name": course.name,
-                "grade": course.grade,
-                "Last Updated": course.updateDate,
-                "assignments": course.assignments
-            }
-        )
+#     for course in classes:
+#         courses.append(
+#             {
+#                 "name": course.name,
+#                 "grade": course.grade,
+#                 "Last Updated": course.updateDate,
+#                 "assignments": course.assignments
+#             }
+#         )
 
-    return {"currentClasses": courses}
+#     return {"currentClasses": courses}
 
-@app.route("/students/info", methods=["GET"])
-def sendInfo():
-    username = request.args.get("username")
-    password = request.args.get("password")
+# @app.route("/students/info", methods=["GET"])
+# def sendInfo():
+#     username = request.args.get("username")
+#     password = request.args.get("password")
 
-    if(username.lower() == "john" and password.lower() == "doe"):
-        return studentData
+#     if(username.lower() == "john" and password.lower() == "doe"):
+#         return studentData
 
-    return getInfo(username, password)
+#     return getInfo(username, password)
 
 
 @app.route("/students/schedule", methods=["GET"])
 def sendSchedule():
+    username = request.args.get("username")
+    password = request.args.get("password")
+  
     encryptedUsername = request.args.get("username")
     encryptedPassword = request.args.get("password")
   
@@ -76,7 +79,7 @@ def sendSchedule():
     password = decrypt(encryptedPassword)
     
     username = username.decode("utf-8", "ignore")
-    password = password.decode("utf-8", "ignore")  
+    password = password.decode("utf-8", "ignore") 
 
     if(username.lower() == "john" and password.lower() == "doe"):
         return schedule
@@ -84,42 +87,46 @@ def sendSchedule():
     return {"schedule": getStudentSchedule(username, password)}
 
 
-@app.route("/students/currentclasses", methods=["GET"])
-def sendCurrentClasses():
-    encryptedUsername = request.args.get("username")
-    encryptedPassword = request.args.get("password")
+# @app.route("/students/currentclasses", methods=["GET"])
+# def sendCurrentClasses():
+
+#     username = request.args.get("username")
+#     password = request.args.get("password")
   
-    key = 'AAAAAAAAAAAAAAAA' #Must Be 16 char for AES128
-    def decrypt(enc):
-        enc = base64.b64decode(enc)
-        cipher = AES.new(key.encode('utf-8'), AES.MODE_ECB)
-        return unpad(cipher.decrypt(enc),16)
-    # encryptedUsername = username
-    username = decrypt(encryptedUsername)
-    # encryptedPassword = password
-    password = decrypt(encryptedPassword)
+#     encryptedUsername = request.args.get("username")
+#     encryptedPassword = request.args.get("password")
+  
+#     key = 'AAAAAAAAAAAAAAAA' #Must Be 16 char for AES128
+#     def decrypt(enc):
+#         enc = base64.b64decode(enc)
+#         cipher = AES.new(key.encode('utf-8'), AES.MODE_ECB)
+#         return unpad(cipher.decrypt(enc),16)
+#     # encryptedUsername = username
+#     username = decrypt(encryptedUsername)
+#     # encryptedPassword = password
+#     password = decrypt(encryptedPassword)
     
-    username = username.decode("utf-8", "ignore")
-    password = password.decode("utf-8", "ignore")  
+#     username = username.decode("utf-8", "ignore")
+#     password = password.decode("utf-8", "ignore")  
 
-    if(username.lower() == "john" and password.lower() == "doe"):
-        return currentClasses
+#     if(username.lower() == "john" and password.lower() == "doe"):
+#         return currentClasses
 
-    courses = []
+#     courses = []
 
-    classes = getCurrentClasses(username, password)
+#     classes = getCurrentClasses(username, password)
 
-    for course in classes:
-        courses.append(
-            {
-                "name": course.name,
-                "grade": course.grade,
-                "Last Updated": course.updateDate,
-                "assignments": course.assignments
-            }
-        )
+#     for course in classes:
+#         courses.append(
+#             {
+#                 "name": course.name,
+#                 "grade": course.grade,
+#                 "Last Updated": course.updateDate,
+#                 "assignments": course.assignments
+#             }
+#         )
 
-    return {"currentClasses": courses}
+#     return {"currentClasses": courses}
 
 if __name__ == "main__":
     app.run()
