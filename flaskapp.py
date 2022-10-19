@@ -62,8 +62,21 @@ def sendInfo():
 
 @app.route("/students/schedule", methods=["GET"])
 def sendSchedule():
-    username = request.args.get("username")
-    password = request.args.get("password")
+    encryptedUsername = request.args.get("username")
+    encryptedPassword = request.args.get("password")
+  
+    key = 'AAAAAAAAAAAAAAAA' #Must Be 16 char for AES128
+    def decrypt(enc):
+        enc = base64.b64decode(enc)
+        cipher = AES.new(key.encode('utf-8'), AES.MODE_ECB)
+        return unpad(cipher.decrypt(enc),16)
+    # encryptedUsername = username
+    username = decrypt(encryptedUsername)
+    # encryptedPassword = password
+    password = decrypt(encryptedPassword)
+    
+    username = username.decode("utf-8", "ignore")
+    password = password.decode("utf-8", "ignore")  
 
     if(username.lower() == "john" and password.lower() == "doe"):
         return schedule
@@ -73,10 +86,6 @@ def sendSchedule():
 
 @app.route("/students/currentclasses", methods=["GET"])
 def sendCurrentClasses():
-
-    username = request.args.get("username")
-    password = request.args.get("password")
-  
     encryptedUsername = request.args.get("username")
     encryptedPassword = request.args.get("password")
   
